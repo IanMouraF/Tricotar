@@ -19,25 +19,108 @@
             color: var(--text);
             margin: 0;
             padding: 0;
-            padding-bottom: 80px;
         }
+
+        /* ---- TELA DE LOGIN ---- */
+        #login-screen {
+            position: fixed;
+            inset: 0;
+            background-color: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        #login-screen.hidden { display: none; }
+
+        .login-card {
+            background: white;
+            border-radius: 24px;
+            padding: 48px 36px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(219,112,147,0.15);
+            max-width: 360px;
+            width: 100%;
+        }
+
+        .login-card .yarn-icon { font-size: 56px; display: block; margin-bottom: 12px; }
+        .login-card h1 { font-size: 1.6em; color: var(--primary-dark); margin: 0 0 6px; }
+        .login-card .subtitle { color: #aaa; font-size: 0.9em; margin-bottom: 28px; }
+
+        .login-card input[type="text"],
+        .login-card input[type="password"] {
+            width: 100%;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+            border: 1.5px solid #eee;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 1em;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .login-card input:focus { border-color: var(--primary-dark); }
+
+        .btn-entrar {
+            width: 100%;
+            padding: 13px;
+            background-color: var(--primary-dark);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 4px;
+        }
+
+        .btn-entrar:hover { background-color: #c0607f; }
+
+        .login-error {
+            color: #c0392b;
+            font-size: 0.85em;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+
+        /* ---- APP PRINCIPAL ---- */
+        #app { display: none; padding-bottom: 80px; }
+        #app.visible { display: block; }
 
         header {
             background-color: var(--primary);
             color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 1.5em;
-            font-weight: bold;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+
+        .header-title { font-size: 1.3em; font-weight: bold; }
+
+        .btn-sair {
+            background: rgba(255,255,255,0.25);
+            border: 1px solid rgba(255,255,255,0.5);
+            color: white;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            cursor: pointer;
+        }
+
+        .btn-sair:hover { background: rgba(255,255,255,0.4); }
 
         .container { padding: 15px; }
         .tab-content { display: none; animation: fadeIn 0.3s; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Cartões */
         .card {
             background-color: var(--card-bg);
             border-radius: 15px;
@@ -64,7 +147,6 @@
         button.btn-delete { background-color: #ff9999; color: white; border: none; width: auto; padding: 5px 10px; font-size: 0.9em; margin-top: 5px; cursor: pointer; }
         button.btn-icon { width: auto; padding: 5px 10px; display: inline-block; }
 
-        /* Imagem de Fios */
         .foto-fio {
             width: 100%;
             height: 120px;
@@ -74,7 +156,6 @@
             background-color: #f9f9f9;
         }
 
-        /* Gramas Control */
         .gramas-control {
             display: flex;
             align-items: center;
@@ -83,19 +164,17 @@
         }
         .gramas-control input { margin: 0; text-align: center; }
 
-        /* Progresso */
         .progress-container { margin: 10px 0; }
         progress { width: 100%; height: 20px; accent-color: var(--primary-dark); }
         .nota-item { background: #f9f9f9; padding: 8px; border-radius: 5px; font-size: 0.9em; margin-bottom: 5px; border-left: 3px solid var(--primary-dark); }
 
-        /* Menu Inferior */
         .bottom-nav {
             position: fixed; bottom: 0; width: 100%; background-color: white;
             display: flex; justify-content: space-around; box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
         }
         .nav-item { padding: 15px; text-align: center; color: var(--primary-dark); font-weight: bold; cursor: pointer; flex-grow: 1; }
         .nav-item.active { background-color: var(--bg-color); border-top: 3px solid var(--primary-dark); }
-        
+
         .status { display: inline-block; padding: 5px 10px; border-radius: 20px; font-size: 0.8em; font-weight: bold; margin-top: 5px; }
         .status-pronto { background-color: #d4edda; color: #155724; }
         .status-compras { background-color: #f8d7da; color: #721c24; }
@@ -103,65 +182,132 @@
 </head>
 <body>
 
-    <header>🧶 Cantinho da Lilly</header>
-
-    <div class="container">
-        <div id="estoque" class="tab-content active">
-            <h2>Meu Baú de Fios</h2>
-            <div class="card">
-                <h3>Adicionar Novo Fio</h3>
-                <input type="file" id="linhaFoto" accept="image/*" title="Foto da linha">
-                <input type="text" id="linhaMarca" placeholder="Marca (ex: Amigurumi)">
-                <input type="text" id="linhaCor" placeholder="Cor (ex: Rosa Bebê)">
-                <select id="linhaEspessura">
-                    <option value="">Selecione a Espessura</option>
-                    <option value="Fina">Fina</option>
-                    <option value="Média">Média</option>
-                    <option value="Grossa">Grossa</option>
-                </select>
-                <input type="number" id="linhaGramas" placeholder="Gramas (ex: 100)">
-                <button class="btn-primary" onclick="adicionarLinha()">Guardar no Baú</button>
-            </div>
-            <div id="listaEstoque"></div>
-        </div>
-
-        <div id="ideias" class="tab-content">
-            <h2>Ideias e Receitas</h2>
-            <div class="card">
-                <h3>Nova Ideia</h3>
-                <input type="text" id="ideiaNome" placeholder="O que vamos fazer?">
-                <input type="url" id="ideiaLink" placeholder="Link (YouTube, Pinterest, etc)">
-                <p style="font-size: 0.9em; margin-bottom: 5px;">Linha principal necessária:</p>
-                <input type="text" id="ideiaCor" placeholder="Cor necessária">
-                <select id="ideiaEspessura">
-                    <option value="">Espessura necessária</option>
-                    <option value="Fina">Fina</option>
-                    <option value="Média">Média</option>
-                    <option value="Grossa">Grossa</option>
-                </select>
-                <button class="btn-primary" onclick="adicionarIdeia()">Salvar Ideia</button>
-            </div>
-            <div id="listaIdeias"></div>
-        </div>
-
-        <div id="projetos" class="tab-content">
-            <h2>Meus Projetos</h2>
-            <div class="card">
-                <h3>Iniciar Projeto</h3>
-                <input type="text" id="projetoNome" placeholder="Nome do projeto">
-                <button class="btn-primary" onclick="adicionarProjeto()">Começar a agulhar!</button>
-            </div>
-            <div id="listaProjetos"></div>
+    <!-- TELA DE LOGIN -->
+    <div id="login-screen">
+        <div class="login-card">
+            <span class="yarn-icon">🧶</span>
+            <h1>Cantinho da Lilly</h1>
+            <p class="subtitle">Entre para acessar seu baú de fios 💕</p>
+            <input type="text" id="login-user" placeholder="Usuário" autocomplete="username">
+            <input type="password" id="login-pass" placeholder="Senha" autocomplete="current-password">
+            <button class="btn-entrar" onclick="fazerLogin()">Entrar</button>
+            <div class="login-error" id="login-error"></div>
         </div>
     </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="mudarAba('estoque', this)">Baú</div>
-        <div class="nav-item" onclick="mudarAba('ideias', this)">Ideias</div>
-        <div class="nav-item" onclick="mudarAba('projetos', this)">Projetos</div>
+    <!-- APP PRINCIPAL -->
+    <div id="app">
+        <header>
+            <div class="header-title">🧶 Cantinho da Lilly</div>
+            <button class="btn-sair" onclick="fazerLogout()">Sair</button>
+        </header>
+
+        <div class="container">
+            <div id="estoque" class="tab-content active">
+                <h2>Meu Baú de Fios</h2>
+                <div class="card">
+                    <h3>Adicionar Novo Fio</h3>
+                    <input type="file" id="linhaFoto" accept="image/*" title="Foto da linha">
+                    <input type="text" id="linhaMarca" placeholder="Marca (ex: Amigurumi)">
+                    <input type="text" id="linhaCor" placeholder="Cor (ex: Rosa Bebê)">
+                    <select id="linhaEspessura">
+                        <option value="">Selecione a Espessura</option>
+                        <option value="Fina">Fina</option>
+                        <option value="Média">Média</option>
+                        <option value="Grossa">Grossa</option>
+                    </select>
+                    <input type="number" id="linhaGramas" placeholder="Gramas (ex: 100)">
+                    <button class="btn-primary" onclick="adicionarLinha()">Guardar no Baú</button>
+                </div>
+                <div id="listaEstoque"></div>
+            </div>
+
+            <div id="ideias" class="tab-content">
+                <h2>Ideias e Receitas</h2>
+                <div class="card">
+                    <h3>Nova Ideia</h3>
+                    <input type="text" id="ideiaNome" placeholder="O que vamos fazer?">
+                    <input type="url" id="ideiaLink" placeholder="Link (YouTube, Pinterest, etc)">
+                    <p style="font-size: 0.9em; margin-bottom: 5px;">Linha principal necessária:</p>
+                    <input type="text" id="ideiaCor" placeholder="Cor necessária">
+                    <select id="ideiaEspessura">
+                        <option value="">Espessura necessária</option>
+                        <option value="Fina">Fina</option>
+                        <option value="Média">Média</option>
+                        <option value="Grossa">Grossa</option>
+                    </select>
+                    <button class="btn-primary" onclick="adicionarIdeia()">Salvar Ideia</button>
+                </div>
+                <div id="listaIdeias"></div>
+            </div>
+
+            <div id="projetos" class="tab-content">
+                <h2>Meus Projetos</h2>
+                <div class="card">
+                    <h3>Iniciar Projeto</h3>
+                    <input type="text" id="projetoNome" placeholder="Nome do projeto">
+                    <button class="btn-primary" onclick="adicionarProjeto()">Começar a agulhar!</button>
+                </div>
+                <div id="listaProjetos"></div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="mudarAba('estoque', this)">Baú</div>
+            <div class="nav-item" onclick="mudarAba('ideias', this)">Ideias</div>
+            <div class="nav-item" onclick="mudarAba('projetos', this)">Projetos</div>
+        </div>
     </div>
 
     <script>
+        // ---- LOGIN ----
+        const USUARIO = 'lily';
+        const SENHA = 'teamo';
+
+        function verificarSessao() {
+            if (sessionStorage.getItem('lilly_logada') === 'sim') {
+                mostrarApp();
+            }
+        }
+
+        function fazerLogin() {
+            const user = document.getElementById('login-user').value.trim().toLowerCase();
+            const pass = document.getElementById('login-pass').value;
+            if (user === USUARIO && pass === SENHA) {
+                sessionStorage.setItem('lilly_logada', 'sim');
+                document.getElementById('login-error').textContent = '';
+                mostrarApp();
+            } else {
+                document.getElementById('login-error').textContent = 'Usuário ou senha incorretos 🙈';
+            }
+        }
+
+        function fazerLogout() {
+            sessionStorage.removeItem('lilly_logada');
+            document.getElementById('login-user').value = '';
+            document.getElementById('login-pass').value = '';
+            document.getElementById('app').classList.remove('visible');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+
+        function mostrarApp() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app').classList.add('visible');
+            renderizarTudo();
+        }
+
+        // Permite pressionar Enter no campo de senha
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('login-pass').addEventListener('keydown', e => {
+                if (e.key === 'Enter') fazerLogin();
+            });
+            document.getElementById('login-user').addEventListener('keydown', e => {
+                if (e.key === 'Enter') document.getElementById('login-pass').focus();
+            });
+            verificarSessao();
+        });
+
+        // ---- DADOS ----
         let estoque = JSON.parse(localStorage.getItem('lilly_estoque_v2')) || [];
         let ideias = JSON.parse(localStorage.getItem('lilly_ideias_v2')) || [];
         let projetos = JSON.parse(localStorage.getItem('lilly_projetos_v2')) || [];
@@ -184,7 +330,7 @@
             }
         }
 
-        // --- ESTOQUE ---
+        // ---- ESTOQUE ----
         function adicionarLinha() {
             const marca = document.getElementById('linhaMarca').value;
             const cor = document.getElementById('linhaCor').value;
@@ -194,7 +340,6 @@
 
             if(!marca || !cor || !espessura) return alert("Preencha marca, cor e espessura!");
 
-            // Lógica para salvar a imagem
             if(fotoInput.files && fotoInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -232,7 +377,7 @@
             renderizarTudo();
         }
 
-        // --- IDEIAS ---
+        // ---- IDEIAS ----
         function adicionarIdeia() {
             const nome = document.getElementById('ideiaNome').value;
             const link = document.getElementById('ideiaLink').value;
@@ -256,7 +401,7 @@
             renderizarTudo();
         }
 
-        // --- PROJETOS ---
+        // ---- PROJETOS ----
         function adicionarProjeto() {
             const nome = document.getElementById('projetoNome').value;
             if(!nome) return alert("Dê um nome ao seu projeto!");
@@ -295,18 +440,19 @@
             renderizarTudo();
         }
 
-        // --- RENDERIZAÇÃO ---
+        // ---- RENDERIZAÇÃO ----
         function avaliarPossibilidade(req) {
             if(!req.cor || !req.espessura) return '';
-            const temLinha = estoque.some(linha => 
-                linha.cor.toLowerCase().includes(req.cor.toLowerCase()) && 
+            const temLinha = estoque.some(linha =>
+                linha.cor.toLowerCase().includes(req.cor.toLowerCase()) &&
                 linha.espessura === req.espessura
             );
-            return temLinha ? `<span class="status status-pronto">Pronto para a agulha! ✨</span>` : `<span class="status status-compras">Dia de comprinhas! 🛍️</span>`;
+            return temLinha
+                ? `<span class="status status-pronto">Pronto para a agulha! ✨</span>`
+                : `<span class="status status-compras">Dia de comprinhas! 🛍️</span>`;
         }
 
         function renderizarTudo() {
-            // Estoque
             const divEstoque = document.getElementById('listaEstoque');
             divEstoque.innerHTML = '';
             estoque.forEach(linha => {
@@ -325,7 +471,6 @@
                     </div>`;
             });
 
-            // Ideias
             const divIdeias = document.getElementById('listaIdeias');
             divIdeias.innerHTML = '';
             ideias.forEach(ideia => {
@@ -340,12 +485,10 @@
                     </div>`;
             });
 
-            // Projetos
             const divProjetos = document.getElementById('listaProjetos');
             divProjetos.innerHTML = '';
             projetos.forEach(proj => {
                 let notasHTML = proj.notas.map(n => `<div class="nota-item"><em>${n.data}:</em> ${n.texto}</div>`).join('');
-                
                 divProjetos.innerHTML += `
                     <div class="card">
                         <strong>${proj.nome}</strong>
@@ -353,7 +496,6 @@
                             <label style="font-size: 0.8em;">Progresso: ${proj.progresso}%</label>
                             <input type="range" min="0" max="100" value="${proj.progresso}" onchange="atualizarProgresso(${proj.id}, this.value)">
                         </div>
-                        
                         <div style="margin-top: 15px;">
                             <strong>Diário de Bordo:</strong>
                             ${notasHTML}
@@ -362,13 +504,10 @@
                                 <button class="btn-primary" style="width: auto;" onclick="adicionarNota(${proj.id})">Salvar</button>
                             </div>
                         </div>
-                        
                         <button class="btn-delete" style="margin-top: 15px;" onclick="removerProjeto(${proj.id})">Finalizar/Remover</button>
                     </div>`;
             });
         }
-
-        renderizarTudo();
     </script>
 </body>
 </html>
