@@ -3,53 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cantinho da Lilly 💕</title>
+    <title>Crochê da Lilly 💕</title>
     <style>
+        :root {
+            --bg-color: #fff0f5;
+            --primary-dark: #db7093;
+        }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #fff0f5;
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh; margin: 0;
-            color: #4a4a4a;
+            background-color: var(--bg-color);
+            margin: 0; padding: 0;
+            display: flex; align-items: center; justify-content: center; height: 100vh;
         }
-        .card {
-            background: white; padding: 35px 25px; border-radius: 20px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.06); text-align: center;
-            border-top: 8px solid #ffb6c1; width: 90%; max-width: 320px;
+        .login-card {
+            background: white; border-radius: 24px; padding: 48px 36px;
+            text-align: center; box-shadow: 0 8px 32px rgba(219,112,147,0.15);
+            max-width: 360px; width: 90%;
         }
-        .card h2 { color: #db7093; margin-top: 0; }
-        input {
-            width: 100%; padding: 12px; margin: 10px 0;
-            border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box;
-            font-size: 1em; text-align: center;
+        .login-card .yarn-icon { font-size: 56px; display: block; margin-bottom: 12px; }
+        .login-card h1 { font-size: 1.6em; color: var(--primary-dark); margin: 0 0 6px; }
+        .login-card .subtitle { color: #aaa; font-size: 0.9em; margin-bottom: 28px; }
+        .login-card input {
+            width: 100%; padding: 12px 14px; margin-bottom: 12px;
+            border: 1.5px solid #eee; border-radius: 10px; box-sizing: border-box;
+            font-size: 1em; outline: none; transition: border-color 0.2s;
         }
-        input:focus { outline: none; border-color: #db7093; }
-        button {
-            background: #db7093; color: white; border: none;
-            padding: 12px; width: 100%; border-radius: 8px;
-            font-weight: bold; font-size: 1.05em; cursor: pointer;
-            transition: background 0.2s; margin-top: 10px;
+        .login-card input:focus { border-color: var(--primary-dark); }
+        .btn-entrar {
+            width: 100%; padding: 13px; background-color: var(--primary-dark);
+            color: white; border: none; border-radius: 50px; font-size: 1em;
+            font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 4px;
         }
-        button:hover { background: #c75b7e; }
-        .erro { 
-            background: #f8d7da; color: #721c24; padding: 10px; 
-            border-radius: 8px; font-size: 0.85em; margin-bottom: 10px; 
-        }
+        .btn-entrar:hover { background-color: #c0607f; }
+        .login-error { color: #c0392b; font-size: 0.85em; margin-bottom: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>🧶 Oi, Lilly!</h2>
-        <p>Entre no seu cantinho especial:</p>
+    <div class="login-card">
+        <span class="yarn-icon">🧶</span>
+        <h1>Cantinho da Lilly</h1>
+        <p class="subtitle">Entre para acessar seu baú de fios 💕</p>
         
         {% if erro %}
-        <div class="erro">{{ erro }}</div>
+        <div class="login-error">{{ erro }}</div>
         {% endif %}
         
         <form method="POST">
-            <input type="text" name="usuario" placeholder="Seu usuário..." required autofocus>
-            <input type="password" name="senha" placeholder="Sua senha mágica..." required>
-            <button type="submit">Entrar no Baú</button>
+            <input type="text" name="usuario" placeholder="Usuário" required autofocus>
+            <input type="password" name="senha" placeholder="Senha" required>
+            <button type="submit" class="btn-entrar">Entrar</button>
         </form>
     </div>
 </body>

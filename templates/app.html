@@ -12,394 +12,405 @@
             --text: #4a4a4a;
             --card-bg: #ffffff;
         }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text); margin: 0; padding: 0; }
+        * { scrollbar-width: none; }
+        *::-webkit-scrollbar { display: none; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-            padding-bottom: 80px;
-        }
-
-        header {
-            background-color: var(--primary);
-            color: white;
-            padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .header-title {
-            font-size: 1.3em;
-            font-weight: bold;
-        }
-
-        .header-user {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .header-user img {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid white;
-        }
-
-        .header-user span {
-            font-size: 0.85em;
-            max-width: 120px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .btn-logout {
-            background: rgba(255,255,255,0.25);
-            border: 1px solid rgba(255,255,255,0.5);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            cursor: pointer;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-
-        .btn-logout:hover { background: rgba(255,255,255,0.4); }
-
+        #app { padding-bottom: 80px; }
+        header { background-color: var(--primary); color: white; padding: 14px 20px; text-align: center; font-size: 1.5em; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .container { padding: 15px; }
         .tab-content { display: none; animation: fadeIn 0.3s; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            border-left: 5px solid var(--primary);
-        }
-
-        input, select, button, textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-family: inherit;
-        }
-
-        textarea { resize: vertical; }
-
+        .card { background-color: var(--card-bg); border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid var(--primary); }
+        input, select, button, textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
+        input[type="file"] { display: none; }
+        .foto-label { display: block; width: 100%; padding: 10px; margin-bottom: 10px; background-color: #fff0f5; border: 1.5px dashed var(--primary-dark); border-radius: 8px; box-sizing: border-box; color: var(--primary-dark); font-size: 0.95em; font-weight: bold; text-align: center; cursor: pointer; transition: background 0.2s; }
+        .foto-label:hover { background-color: #ffe0ec; }
         button.btn-primary { background-color: var(--primary-dark); color: white; border: none; font-weight: bold; cursor: pointer; }
         button.btn-secondary { background-color: #f1f1f1; color: var(--text); border: 1px solid #ccc; cursor: pointer; }
         button.btn-delete { background-color: #ff9999; color: white; border: none; width: auto; padding: 5px 10px; font-size: 0.9em; margin-top: 5px; cursor: pointer; }
         button.btn-icon { width: auto; padding: 5px 10px; display: inline-block; }
-
-        .foto-fio {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            background-color: #f9f9f9;
-        }
-
-        .gramas-control {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 10px 0;
-        }
+        .foto-fio { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background-color: #f9f9f9; }
+        .gramas-control { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
         .gramas-control input { margin: 0; text-align: center; }
 
-        .progress-container { margin: 10px 0; }
-        progress { width: 100%; height: 20px; accent-color: var(--primary-dark); }
-        .nota-item { background: #f9f9f9; padding: 8px; border-radius: 5px; font-size: 0.9em; margin-bottom: 5px; border-left: 3px solid var(--primary-dark); }
+        .progress-container { margin: 12px 0 6px; }
+        .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .progress-label { font-size: 0.82em; color: #aaa; }
+        .progress-pct { font-size: 0.9em; font-weight: bold; color: var(--primary-dark); }
+        .progress-track { width: 100%; height: 10px; background: #f5d6e0; border-radius: 99px; overflow: hidden; margin-bottom: 8px; }
+        .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #ffb6c1, var(--primary-dark)); transition: width 0.3s ease; }
+        input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; border-radius: 99px; background: #f5d6e0; outline: none; border: none; padding: 0; margin: 0; cursor: pointer; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--primary-dark); cursor: pointer; box-shadow: 0 2px 8px rgba(219,112,147,0.45); border: 3px solid white; }
 
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; background-color: white;
-            display: flex; justify-content: space-around; box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-        }
+        .nota-item { background: #f9f9f9; padding: 10px; border-radius: 8px; font-size: 0.9em; margin-bottom: 8px; border-left: 3px solid var(--primary-dark); }
+        .nota-item .nota-data { color: #bbb; font-size: 0.82em; margin-bottom: 3px; }
+        .nota-item .nota-texto { margin-bottom: 6px; }
+        .nota-item img { width: 100%; max-height: 180px; object-fit: cover; border-radius: 6px; margin-top: 4px; }
+        .nota-input-area { margin-top: 12px; }
+        .nota-foto-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .nota-foto-btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 13px; background: #fff0f5; border: 1.5px dashed var(--primary-dark); border-radius: 20px; color: var(--primary-dark); font-size: 0.8em; font-weight: bold; cursor: pointer; }
+        .nota-foto-btn:hover { background: #ffe0ec; }
+        .nota-foto-nome { font-size: 0.78em; color: var(--primary-dark); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .nota-input-row { display: flex; gap: 5px; }
+
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background-color: white; display: flex; justify-content: space-around; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
         .nav-item { padding: 15px; text-align: center; color: var(--primary-dark); font-weight: bold; cursor: pointer; flex-grow: 1; }
         .nav-item.active { background-color: var(--bg-color); border-top: 3px solid var(--primary-dark); }
-
         .status { display: inline-block; padding: 5px 10px; border-radius: 20px; font-size: 0.8em; font-weight: bold; margin-top: 5px; }
         .status-pronto { background-color: #d4edda; color: #155724; }
         .status-compras { background-color: #f8d7da; color: #721c24; }
     </style>
 </head>
 <body>
+    <div id="app">
+        <header>🧶 Cantinho da Lilly</header>
 
-    <header>
-        <div class="header-title">🧶 Cantinho da Lilly</div>
-        <div class="header-user">
-            {% if user.profile_image_url %}
-                <img src="{{ user.profile_image_url }}" alt="Foto de perfil">
-            {% endif %}
-            {% if user.first_name %}
-                <span>{{ user.first_name }}</span>
-            {% elif user.email %}
-                <span>{{ user.email }}</span>
-            {% endif %}
-            <a href="{{ url_for('replit_auth.logout') }}" class="btn-logout">Sair</a>
-        </div>
-    </header>
-
-    <div class="container">
-        <div id="estoque" class="tab-content active">
-            <h2>Meu Baú de Fios NUVEM</h2>
-            <div class="card">
-                <h3>Adicionar Novo Fio</h3>
-                <input type="file" id="linhaFoto" accept="image/*" title="Foto da linha">
-                <input type="text" id="linhaMarca" placeholder="Marca (ex: Amigurumi)">
-                <input type="text" id="linhaCor" placeholder="Cor (ex: Rosa Bebê)">
-                <select id="linhaEspessura">
-                    <option value="">Selecione a Espessura</option>
-                    <option value="Fina">Fina</option>
-                    <option value="Média">Média</option>
-                    <option value="Grossa">Grossa</option>
-                </select>
-                <input type="number" id="linhaGramas" placeholder="Gramas (ex: 100)">
-                <button class="btn-primary" onclick="adicionarLinha()">Guardar no Baú</button>
+        <div class="container">
+            <div id="estoque" class="tab-content active">
+                <h2>Meu Baú de Fios</h2>
+                <div class="card">
+                    <h3>Adicionar Novo Fio</h3>
+                    <label class="foto-label" for="linhaFoto" id="linhaFotoLabel">🌸 Clique aqui pra escolher a imagem</label>
+                    <input type="file" id="linhaFoto" accept="image/*">
+                    <input type="text" id="linhaMarca" placeholder="Marca (ex: Amigurumi)">
+                    <input type="text" id="linhaCor" placeholder="Cor (ex: Rosa Bebê)">
+                    <select id="linhaEspessura">
+                        <option value="">Selecione a Espessura</option>
+                        <option value="Fina">Fina</option>
+                        <option value="Média">Média</option>
+                        <option value="Grossa">Grossa</option>
+                    </select>
+                    <input type="number" id="linhaGramas" placeholder="Gramas (ex: 100)">
+                    <button class="btn-primary" onclick="adicionarLinha()">Guardar no Baú</button>
+                </div>
+                <div id="listaEstoque"></div>
             </div>
-            <div id="listaEstoque"></div>
-        </div>
 
-        <div id="ideias" class="tab-content">
-            <h2>Ideias e Receitas</h2>
-            <div class="card">
-                <h3>Nova Ideia</h3>
-                <input type="text" id="ideiaNome" placeholder="O que vamos fazer?">
-                <input type="url" id="ideiaLink" placeholder="Link (YouTube, Pinterest, etc)">
-                <p style="font-size: 0.9em; margin-bottom: 5px;">Linha principal necessária:</p>
-                <input type="text" id="ideiaCor" placeholder="Cor necessária">
-                <select id="ideiaEspessura">
-                    <option value="">Espessura necessária</option>
-                    <option value="Fina">Fina</option>
-                    <option value="Média">Média</option>
-                    <option value="Grossa">Grossa</option>
-                </select>
-                <button class="btn-primary" onclick="adicionarIdeia()">Salvar Ideia</button>
+            <div id="ideias" class="tab-content">
+                <h2>Ideias e Receitas</h2>
+                <div class="card">
+                    <h3>Nova Ideia</h3>
+                    <input type="text" id="ideiaNome" placeholder="O que vamos fazer?">
+                    <input type="url" id="ideiaLink" placeholder="Link (YouTube, Pinterest, etc)">
+                    <p style="font-size: 0.9em; margin-bottom: 5px;">Linha principal necessária:</p>
+                    <input type="text" id="ideiaCor" placeholder="Cor necessária">
+                    <select id="ideiaEspessura">
+                        <option value="">Espessura necessária</option>
+                        <option value="Fina">Fina</option>
+                        <option value="Média">Média</option>
+                        <option value="Grossa">Grossa</option>
+                    </select>
+                    <button class="btn-primary" onclick="adicionarIdeia()">Salvar Ideia</button>
+                </div>
+                <div id="listaIdeias"></div>
             </div>
-            <div id="listaIdeias"></div>
-        </div>
 
-        <div id="projetos" class="tab-content">
-            <h2>Meus Projetos</h2>
-            <div class="card">
-                <h3>Iniciar Projeto</h3>
-                <input type="text" id="projetoNome" placeholder="Nome do projeto">
-                <button class="btn-primary" onclick="adicionarProjeto()">Começar a agulhar!</button>
+            <div id="projetos" class="tab-content">
+                <h2>Meus Projetos</h2>
+                <div class="card">
+                    <h3>Iniciar Projeto</h3>
+                    <input type="text" id="projetoNome" placeholder="Nome do projeto">
+                    <button class="btn-primary" onclick="adicionarProjeto()">Começar a agulhar!</button>
+                </div>
+                <div id="listaProjetos"></div>
             </div>
-            <div id="listaProjetos"></div>
         </div>
-    </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="mudarAba('estoque', this)">Baú</div>
-        <div class="nav-item" onclick="mudarAba('ideias', this)">Ideias</div>
-        <div class="nav-item" onclick="mudarAba('projetos', this)">Projetos</div>
+        <input type="file" id="fotoNotaInput" accept="image/*" style="display:none">
+
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="mudarAba('estoque', this)">Baú</div>
+            <div class="nav-item" onclick="mudarAba('ideias', this)">Ideias</div>
+            <div class="nav-item" onclick="mudarAba('projetos', this)">Projetos</div>
+        </div>
     </div>
 
     <script>
-            let estoque = [];
-            let ideias = [];
-            let projetos = [];
+        let estoque = [];
+        let ideias = [];
+        let projetos = [];
+        let _notaProjetoId = null;
+        let _notaFotos = {};
 
-            function mudarAba(abaId, elemento) {
-                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-                document.getElementById(abaId).classList.add('active');
-                elemento.classList.add('active');
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('linhaFoto').addEventListener('change', function() {
+                const label = document.getElementById('linhaFotoLabel');
+                label.textContent = this.files[0] ? '✅ ' + this.files[0].name : '🌸 Clique aqui pra escolher a imagem';
+            });
+            document.getElementById('fotoNotaInput').addEventListener('change', function() {
+                if (!this.files[0] || !_notaProjetoId) return;
+                const reader = new FileReader();
+                const projId = _notaProjetoId;
+                reader.onload = function(e) {
+                    _notaFotos[projId] = { base64: e.target.result, nome: '' };
+                    const nomeEl = document.getElementById(`nota_foto_nome_${projId}`);
+                    if (nomeEl) nomeEl.textContent = '✅ foto selecionada';
+                };
+                reader.readAsDataURL(this.files[0]);
+                this.value = '';
+            });
+            carregarDados();
+        });
+
+        function mudarAba(abaId, elemento) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            document.getElementById(abaId).classList.add('active');
+            elemento.classList.add('active');
+            renderizarTudo();
+        }
+
+        async function carregarDados() {
+            try {
+                const resFios = await fetch('/api/fios');
+                estoque = await resFios.json();
+                const resIdeias = await fetch('/api/ideias');
+                ideias = await resIdeias.json();
+                const resProjetos = await fetch('/api/projetos');
+                projetos = await resProjetos.json();
                 renderizarTudo();
+            } catch (e) { console.error("Erro ao carregar do banco:", e); }
+        }
+
+        // ---- ESTOQUE ----
+        function adicionarLinha() {
+            const marca = document.getElementById('linhaMarca').value;
+            const cor = document.getElementById('linhaCor').value;
+            const espessura = document.getElementById('linhaEspessura').value;
+            const gramas = parseInt(document.getElementById('linhaGramas').value) || 0;
+            const fotoInput = document.getElementById('linhaFoto');
+
+            if(!marca || !cor || !espessura) return alert("Preencha marca, cor e espessura!");
+
+            if(fotoInput.files && fotoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) { salvarNovoFio(marca, cor, espessura, gramas, e.target.result); };
+                reader.readAsDataURL(fotoInput.files[0]);
+            } else {
+                salvarNovoFio(marca, cor, espessura, gramas, '');
             }
+        }
 
-            async function carregarDados() {
-                try {
-                    const resFios = await fetch('/api/fios');
-                    estoque = await resFios.json();
-                    const resIdeias = await fetch('/api/ideias');
-                    ideias = await resIdeias.json();
-                    const resProjetos = await fetch('/api/projetos');
-                    projetos = await resProjetos.json();
-                    renderizarTudo();
-                } catch (e) {
-                    console.error("Erro ao carregar do banco:", e);
-                }
-            }
+        async function salvarNovoFio(marca, cor, espessura, gramas, fotoBase64) {
+            await fetch('/api/fios', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ marca, cor, espessura, gramas, foto: fotoBase64 })
+            });
+            document.getElementById('linhaMarca').value = '';
+            document.getElementById('linhaCor').value = '';
+            document.getElementById('linhaEspessura').value = '';
+            document.getElementById('linhaGramas').value = '';
+            document.getElementById('linhaFoto').value = '';
+            document.getElementById('linhaFotoLabel').textContent = '🌸 Clique aqui pra escolher a imagem';
+            await carregarDados();
+        }
 
-            function adicionarLinha() {
-                const marca = document.getElementById('linhaMarca').value;
-                const cor = document.getElementById('linhaCor').value;
-                const espessura = document.getElementById('linhaEspessura').value;
-                const gramas = parseInt(document.getElementById('linhaGramas').value) || 0;
-                const fotoInput = document.getElementById('linhaFoto');
+        async function alterarGramas(id, valor) {
+            await fetch(`/api/fios/${id}/gramas`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ delta: valor })
+            });
+            await carregarDados();
+        }
 
-                if(!marca || !cor || !espessura) return alert("Preencha marca, cor e espessura!");
+        async function removerLinha(id) {
+            if(!confirm("Deseja mesmo remover?")) return;
+            await fetch(`/api/fios/${id}`, { method: 'DELETE' });
+            await carregarDados();
+        }
 
-                if(fotoInput.files && fotoInput.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) { salvarNovoFio(marca, cor, espessura, gramas, e.target.result); };
-                    reader.readAsDataURL(fotoInput.files[0]);
-                } else {
-                    salvarNovoFio(marca, cor, espessura, gramas, '');
-                }
-            }
+        // ---- IDEIAS ----
+        async function adicionarIdeia() {
+            const nome = document.getElementById('ideiaNome').value;
+            const link = document.getElementById('ideiaLink').value;
+            const corReq = document.getElementById('ideiaCor').value;
+            const espReq = document.getElementById('ideiaEspessura').value;
+            if(!nome) return alert("Dê um nome à ideia!");
 
-            async function salvarNovoFio(marca, cor, espessura, gramas, fotoBase64) {
-                await fetch('/api/fios', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ marca, cor, espessura, gramas, foto: fotoBase64 })
-                });
-                document.getElementById('linhaMarca').value = '';
-                document.getElementById('linhaCor').value = '';
-                document.getElementById('linhaEspessura').value = '';
-                document.getElementById('linhaGramas').value = '';
-                document.getElementById('linhaFoto').value = '';
-                await carregarDados();
-            }
+            await fetch('/api/ideias', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome, link, req: { cor: corReq, espessura: espReq } })
+            });
+            document.getElementById('ideiaNome').value = '';
+            document.getElementById('ideiaLink').value = '';
+            document.getElementById('ideiaCor').value = '';
+            document.getElementById('ideiaEspessura').value = '';
+            await carregarDados();
+        }
 
-            async function alterarGramas(id, valor) {
-                await fetch(`/api/fios/${id}/gramas`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ delta: valor })
-                });
-                await carregarDados();
-            }
+        async function removerIdeia(id) {
+            if(!confirm("Remover ideia?")) return;
+            await fetch(`/api/ideias/${id}`, { method: 'DELETE' });
+            await carregarDados();
+        }
 
-            async function removerLinha(id) {
-                if(!confirm("Deseja mesmo remover?")) return;
-                await fetch(`/api/fios/${id}`, { method: 'DELETE' });
-                await carregarDados();
-            }
+        // ---- PROJETOS ----
+        function abrirFotoNota(id) {
+            _notaProjetoId = id;
+            document.getElementById('fotoNotaInput').click();
+        }
 
-            async function adicionarIdeia() {
-                const nome = document.getElementById('ideiaNome').value;
-                const link = document.getElementById('ideiaLink').value;
-                const corReq = document.getElementById('ideiaCor').value;
-                const espReq = document.getElementById('ideiaEspessura').value;
-                if(!nome) return alert("Dê um nome!");
-                await fetch('/api/ideias', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nome, link, req: { cor: corReq, espessura: espReq } })
-                });
-                document.getElementById('ideiaNome').value = '';
-                document.getElementById('ideiaLink').value = '';
-                document.getElementById('ideiaCor').value = '';
-                document.getElementById('ideiaEspessura').value = '';
-                await carregarDados();
-            }
+        async function adicionarProjeto() {
+            const nome = document.getElementById('projetoNome').value;
+            if(!nome) return alert("Dê um nome ao seu projeto!");
+            await fetch('/api/projetos', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nome })
+            });
+            document.getElementById('projetoNome').value = '';
+            await carregarDados();
+        }
 
-            async function removerIdeia(id) {
-                if(!confirm("Remover ideia?")) return;
-                await fetch(`/api/ideias/${id}`, { method: 'DELETE' });
-                await carregarDados();
-            }
+        async function ideiaParaProjeto(id) {
+            const ideia = ideias.find(i => i.id === id);
+            if (!ideia) return;
+            await fetch('/api/projetos', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nome: ideia.nome })
+            });
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('projetos').classList.add('active');
+            document.querySelectorAll('.nav-item')[2].classList.add('active');
+            await carregarDados();
+        }
 
-            async function adicionarProjeto() {
-                const nome = document.getElementById('projetoNome').value;
-                if(!nome) return alert("Dê um nome!");
-                await fetch('/api/projetos', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nome })
-                });
-                document.getElementById('projetoNome').value = '';
-                await carregarDados();
-            }
+        async function atualizarProgresso(id, valor) {
+            await fetch(`/api/projetos/${id}/progresso`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ valor: parseInt(valor) })
+            });
+            await carregarDados();
+        }
 
-            async function atualizarProgresso(id, valor) {
-                await fetch(`/api/projetos/${id}/progresso`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ valor: parseInt(valor) })
-                });
-                await carregarDados();
-            }
+        async function adicionarNota(id) {
+            const inputNota = document.getElementById(`nota_input_${id}`);
+            const texto = inputNota.value.trim();
+            if(!texto) return;
 
-            async function adicionarNota(id) {
-                const inputNota = document.getElementById(`nota_input_${id}`);
-                const texto = inputNota.value.trim();
-                if(!texto) return;
+            const proj = projetos.find(p => p.id === id);
+            if(proj) {
                 const data = new Date().toLocaleDateString('pt-BR');
+                const fotoData = _notaFotos[id] ? _notaFotos[id].base64 : null;
+                const pct = parseInt(proj.progresso) || 0;
+                
                 await fetch(`/api/projetos/${id}/notas`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ texto, data })
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ texto, data, foto: fotoData, pct })
                 });
+                
+                delete _notaFotos[id];
                 inputNota.value = '';
                 await carregarDados();
             }
+        }
 
-            async function removerProjeto(id) {
-                if(!confirm("Finalizar projeto?")) return;
-                await fetch(`/api/projetos/${id}`, { method: 'DELETE' });
-                await carregarDados();
-            }
+        async function removerNota(projId, idx) {
+            await fetch(`/api/projetos/${projId}/notas/${idx}`, { method: 'DELETE' });
+            await carregarDados();
+        }
 
-            function avaliarPossibilidade(req) {
-                if(!req.cor || !req.espessura) return '';
-                const temLinha = estoque.some(l => l.cor.toLowerCase().includes(req.cor.toLowerCase()) && l.espessura === req.espessura);
-                return temLinha ? `<span class="status status-pronto">Pronto para a agulha! ✨</span>` : `<span class="status status-compras">Dia de comprinhas! 🛍️</span>`;
-            }
+        async function removerProjeto(id) {
+            if(!confirm("Finalizar projeto?")) return;
+            await fetch(`/api/projetos/${id}`, { method: 'DELETE' });
+            await carregarDados();
+        }
 
-            function renderizarTudo() {
-                const divEstoque = document.getElementById('listaEstoque');
-                divEstoque.innerHTML = '';
-                estoque.forEach(linha => {
-                    const imgTag = linha.foto ? `<img src="${linha.foto}" class="foto-fio" alt="Foto">` : '';
-                    divEstoque.innerHTML += `
-                        <div class="card">
-                            ${imgTag}
-                            <strong>${linha.cor}</strong> (${linha.marca})<br>
-                            Esp: ${linha.espessura}
-                            <div class="gramas-control">
-                                <button class="btn-secondary btn-icon" onclick="alterarGramas('${linha.id}', -10)">-10g</button>
-                                <span><strong>${linha.gramas}g</strong></span>
-                                <button class="btn-secondary btn-icon" onclick="alterarGramas('${linha.id}', 10)">+10g</button>
-                            </div>
-                            <button class="btn-delete" onclick="removerLinha('${linha.id}')">Remover</button>
-                        </div>`;
-                });
+        // ---- RENDERIZAÇÃO ----
+        function avaliarPossibilidade(req) {
+            if(!req.cor || !req.espessura) return '';
+            const temLinha = estoque.some(linha => linha.cor.toLowerCase().includes(req.cor.toLowerCase()) && linha.espessura === req.espessura);
+            return temLinha ? `<span class="status status-pronto">Pronto para a agulha! ✨</span>` : `<span class="status status-compras">Dia de comprinhas! 🛍️</span>`;
+        }
 
-                const divIdeias = document.getElementById('listaIdeias');
-                divIdeias.innerHTML = '';
-                ideias.forEach(ideia => {
-                    const linkTag = ideia.link ? `<a href="${ideia.link}" target="_blank" style="color: var(--primary-dark);">🔗 Ver Receita</a><br>` : '';
-                    divIdeias.innerHTML += `
-                        <div class="card">
-                            <strong>${ideia.nome}</strong><br>${linkTag}
-                            Precisa de: ${ideia.req.cor || 'N/A'} (${ideia.req.espessura || 'N/A'})<br>${avaliarPossibilidade(ideia.req)}<br>
+        function renderizarTudo() {
+            const divEstoque = document.getElementById('listaEstoque');
+            divEstoque.innerHTML = '';
+            estoque.forEach(linha => {
+                const imgTag = linha.foto ? `<img src="${linha.foto}" class="foto-fio" alt="Foto da linha">` : '';
+                divEstoque.innerHTML += `
+                    <div class="card">
+                        ${imgTag}
+                        <strong>${linha.cor}</strong> (${linha.marca})<br>
+                        Espessura: ${linha.espessura}
+                        <div class="gramas-control">
+                            <button class="btn-secondary btn-icon" onclick="alterarGramas('${linha.id}', -10)">-10g</button>
+                            <span><strong>${linha.gramas}g</strong></span>
+                            <button class="btn-secondary btn-icon" onclick="alterarGramas('${linha.id}', 10)">+10g</button>
+                        </div>
+                        <button class="btn-delete" onclick="removerLinha('${linha.id}')">Remover</button>
+                    </div>`;
+            });
+
+            const divIdeias = document.getElementById('listaIdeias');
+            divIdeias.innerHTML = '';
+            ideias.forEach(ideia => {
+                const linkTag = ideia.link ? `<a href="${ideia.link}" target="_blank" style="color: var(--primary-dark); font-size: 0.9em;">🔗 Ver Referência/Receita</a><br>` : '';
+                divIdeias.innerHTML += `
+                    <div class="card">
+                        <strong>${ideia.nome}</strong><br>
+                        ${linkTag}
+                        Precisa de: ${ideia.req.cor || 'N/A'} (${ideia.req.espessura || 'N/A'})<br>
+                        ${avaliarPossibilidade(ideia.req)}<br>
+                        <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+                            <button class="btn-primary btn-icon" onclick="ideiaParaProjeto('${ideia.id}')">🧶 Começar projeto!</button>
                             <button class="btn-delete" onclick="removerIdeia('${ideia.id}')">Remover</button>
-                        </div>`;
-                });
+                        </div>
+                    </div>`;
+            });
 
-                const divProjetos = document.getElementById('listaProjetos');
-                divProjetos.innerHTML = '';
-                projetos.forEach(proj => {
-                    let notasHTML = proj.notas.map(n => `<div class="nota-item"><em>${n.data}:</em> ${n.texto}</div>`).join('');
-                    divProjetos.innerHTML += `
-                        <div class="card">
-                            <strong>${proj.nome}</strong>
-                            <div class="progress-container">
-                                <label>Progresso: ${proj.progresso}%</label>
-                                <input type="range" min="0" max="100" value="${proj.progresso}" onchange="atualizarProgresso('${proj.id}', this.value)">
+            const divProjetos = document.getElementById('listaProjetos');
+            divProjetos.innerHTML = '';
+            projetos.forEach(proj => {
+                const pct = parseInt(proj.progresso) || 0;
+                let notasHTML = proj.notas.map((n, i) => `
+                    <div class="nota-item">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;">
+                            <div>
+                                <div class="nota-data">${n.data}${n.pct !== undefined ? ` · 🧶 ${n.pct}%` : ''}</div>
+                                <div class="nota-texto">${n.texto}</div>
                             </div>
-                            <div style="margin-top: 15px;">
-                                <strong>Diário de Bordo:</strong>${notasHTML}
-                                <div style="display: flex; gap: 5px; margin-top: 10px;">
-                                    <input type="text" id="nota_input_${proj.id}" placeholder="Dificuldades..." style="margin: 0;">
+                            <button onclick="removerNota('${proj.id}', ${i})" style="background:none;border:none;color:#ccc;font-size:1em;cursor:pointer;padding:0;width:auto;flex-shrink:0;line-height:1;" title="Remover">✕</button>
+                        </div>
+                        ${n.foto ? `<img src="${n.foto}" alt="foto da nota">` : ''}
+                    </div>`).join('');
+                    
+                const fotoSelecionada = _notaFotos[proj.id];
+                divProjetos.innerHTML += `
+                    <div class="card">
+                        <strong>${proj.nome}</strong><br>
+
+                        <div class="progress-container">
+                            <div class="progress-header">
+                                <span class="progress-label">Progresso</span>
+                                <span class="progress-pct">🧶 ${pct}%</span>
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-fill" style="width:${pct}%"></div>
+                            </div>
+                            <input type="range" min="0" max="100" value="${pct}"
+                                oninput="this.previousElementSibling.firstElementChild.style.width=this.value+'%'; this.closest('.card').querySelector('.progress-pct').textContent='🧶 '+this.value+'%';"
+                                onchange="atualizarProgresso('${proj.id}', this.value)">
+                        </div>
+
+                        <div style="margin-top: 14px;">
+                            <strong>Diário de Bordo:</strong>
+                            ${notasHTML}
+                            <div class="nota-input-area">
+                                <div class="nota-foto-row">
+                                    <span class="nota-foto-btn" onclick="abrirFotoNota('${proj.id}')">📸 Adicionar Fotinha</span>
+                                    <span class="nota-foto-nome" id="nota_foto_nome_${proj.id}">${fotoSelecionada ? '✅ foto selecionada' : ''}</span>
+                                </div>
+                                <div class="nota-input-row">
+                                    <input type="text" id="nota_input_${proj.id}" placeholder="Dificuldades, adaptações..." style="margin: 0;">
                                     <button class="btn-primary" style="width: auto;" onclick="adicionarNota('${proj.id}')">Salvar</button>
                                 </div>
                             </div>
-                            <button class="btn-delete" style="margin-top: 15px;" onclick="removerProjeto('${proj.id}')">Finalizar/Remover</button>
-                        </div>`;
-                });
-            }
-            carregarDados();
+                        </div>
+
+                        <button class="btn-delete" style="margin-top: 15px;" onclick="removerProjeto('${proj.id}')">Finalizar/Remover</button>
+                    </div>`;
+            });
+        }
     </script>
 </body>
 </html>
