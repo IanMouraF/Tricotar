@@ -150,7 +150,7 @@
             {% elif user.email %}
                 <span>{{ user.email }}</span>
             {% endif %}
-            <a href="{{ url_for('replit_auth.logout') }}" class="btn-logout">Sair</a>
+            <a href="#" onclick="fazerLogout(event)" class="btn-logout">Sair</a>
         </div>
     </header>
 
@@ -393,6 +393,28 @@
             return temLinha
                 ? `<span class="status status-pronto">Pronto para a agulha! ✨</span>`
                 : `<span class="status status-compras">Dia de comprinhas! 🛍️</span>`;
+        }
+
+        async function fazerLogout(event) {
+            if (event) event.preventDefault();
+
+            try {
+                const response = await fetch('/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    // Sessão limpa no banco, volta para a tela de login
+                    window.location.href = '/';
+                } else {
+                    alert('Erro ao fazer logout.');
+                }
+            } catch (error) {
+                console.error('Erro na requisição de logout:', error);
+            }
         }
 
         function renderizarTudo() {

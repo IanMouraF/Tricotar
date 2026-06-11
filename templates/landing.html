@@ -3,92 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crochê da Lilly 💕</title>
+    <title>Cantinho da Lilly - Entre ou Cadastre-se 🧶</title>
     <style>
         :root {
             --bg-color: #fff0f5;
             --primary: #ffb6c1;
             --primary-dark: #db7093;
             --text: #4a4a4a;
+            --card-bg: #ffffff;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text);
-            min-height: 100vh;
+            margin: 0;
+            padding: 0;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            min-height: 100vh;
         }
 
-        .landing-card {
-            background: white;
-            border-radius: 24px;
-            padding: 48px 36px;
-            text-align: center;
-            box-shadow: 0 8px 32px rgba(219,112,147,0.15);
-            max-width: 400px;
+        .login-container {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
             width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+            border-top: 8px solid var(--primary);
+            margin: 15px;
+            box-sizing: border-box;
         }
 
-        .yarn-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-            display: block;
+        .header-box {
+            text-align: center;
+            margin-bottom: 25px;
         }
 
-        h1 {
+        .header-box h1 {
             font-size: 1.8em;
             color: var(--primary-dark);
-            margin-bottom: 8px;
+            margin: 0 0 10px 0;
         }
 
-        .subtitle {
-            color: #aaa;
+        .header-box p {
+            font-size: 0.9em;
+            color: #777;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--text);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: inherit;
             font-size: 0.95em;
-            margin-bottom: 36px;
-            line-height: 1.5;
+            transition: border-color 0.2s;
         }
 
-        .btn-login {
-            display: inline-block;
+        input:focus {
+            border-color: var(--primary-dark);
+            outline: none;
+        }
+
+        button.btn-submit {
             background-color: var(--primary-dark);
             color: white;
-            padding: 14px 40px;
-            border-radius: 50px;
-            text-decoration: none;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
             font-weight: bold;
             font-size: 1em;
-            transition: background 0.2s, transform 0.1s;
-            border: none;
             cursor: pointer;
             width: 100%;
+            margin-top: 10px;
+            transition: background-color 0.2s;
         }
 
-        .btn-login:hover {
-            background-color: #c0607f;
-            transform: translateY(-1px);
+        button.btn-submit:hover {
+            background-color: #c75b7e;
         }
 
-        .footer-note {
-            margin-top: 24px;
-            font-size: 0.8em;
-            color: #ccc;
+        .toggle-auth {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+
+        .toggle-auth a {
+            color: var(--primary-dark);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .toggle-auth a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+            display: none;
+            text-align: center;
+            border-left: 4px solid #f5c6cb;
         }
     </style>
 </head>
 <body>
-    <div class="landing-card">
-        <span class="yarn-icon">🧶</span>
-        <h1>Cantinho da Lilly</h1>
-        <p class="subtitle">Seu espaço para organizar fios, ideias e projetos de crochê com muito carinho 💕</p>
-        <a href="/app" class="btn-login">Entrar</a>
-        <p class="footer-note">Faça login para acessar seu baú de fios</p>
+
+    <div class="login-container">
+        <div class="header-box">
+            <h1 id="authTitle">🧶 Cantinho da Lilly</h1>
+            <p id="authSubtitle">Gerencie seus fios, projetos e ideias de crochê</p>
+        </div>
+
+        <div id="errorAlert" class="error-message"></div>
+
+        <form id="authForm" onsubmit="handleAuth(event)">
+            <div class="form-group" id="groupFirstName" style="display: none;">
+                <label for="firstName">Como quer ser chamada(o)?</label>
+                <input type="text" id="firstName" placeholder="Ex: Lilly">
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" required placeholder="seu@email.com">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" required placeholder="Digite sua senha">
+            </div>
+
+            <button type="submit" class="btn-submit" id="btnSubmit">Entrar no Cantinho</button>
+        </form>
+
+        <div class="toggle-auth">
+            <span id="toggleText">Novo por aqui?</span> 
+            <a href="#" id="toggleLink" onclick="switchMode(event)">Criar uma Conta</a>
+        </div>
     </div>
+
+    <script>
+        // Define o modo padrão como login
+        let isLoginMode = true;
+
+        const errorAlert = document.getElementById('errorAlert');
+        const groupFirstName = document.getElementById('groupFirstName');
+        const firstNameInput = document.getElementById('firstName');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const authTitle = document.getElementById('authTitle');
+        const authSubtitle = document.getElementById('authSubtitle');
+        const btnSubmit = document.getElementById('btnSubmit');
+        const toggleText = document.getElementById('toggleText');
+        const toggleLink = document.getElementById('toggleLink');
+
+        function switchMode(e) {
+            e.preventDefault();
+            isLoginMode = !isLoginMode;
+            errorAlert.style.display = 'none';
+
+            if (isLoginMode) {
+                authTitle.innerText = " 🧶 Cantinho da Lilly";
+                authSubtitle.innerText = "Gerencie seus fios, projetos e ideias de crochê";
+                groupFirstName.style.display = 'none';
+                firstNameInput.removeAttribute('required');
+                btnSubmit.innerText = "Entrar no Cantinho";
+                toggleText.innerText = "Novo por aqui?";
+                toggleLink.innerText = "Criar uma Conta";
+            } else {
+                authTitle.innerText = "✨ Criar Conta";
+                authSubtitle.innerText = "Cadastre-se para salvar seus novelos na nuvem";
+                groupFirstName.style.display = 'block';
+                firstNameInput.setAttribute('required', 'required');
+                btnSubmit.innerText = "Cadastrar e Entrar";
+                toggleText.innerText = "Já tem conta?";
+                toggleLink.innerText = "Fazer Login";
+            }
+        }
+
+        async function handleAuth(e) {
+            e.preventDefault();
+            errorAlert.style.display = 'none';
+
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            
+            // Define a URL e o corpo da requisição baseado no modo atual
+            const url = isLoginMode ? '/auth/login' : '/auth/register';
+            const payload = { email, password };
+
+            if (!isLoginMode) {
+                payload.first_name = firstNameInput.value;
+            }
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.getJson ? await response.json() : JSON.parse(await response.text());
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Ocorreu um erro inesperado.');
+                }
+
+                // Se deu certo (tanto login quanto cadastro), o backend põe o cookie da sessão
+                // Redireciona o usuário para o app logado
+                window.location.href = '/app';
+
+            } catch (err) {
+                errorAlert.innerText = err.message;
+                errorAlert.style.display = 'block';
+            }
+        }
+    </script>
 </body>
 </html>
