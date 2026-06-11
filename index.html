@@ -235,62 +235,60 @@
             border: 3px solid white;
         }
 
-        /* Fotos do progresso */
-        .fotos-progresso {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin: 10px 0 6px;
+        /* Notas do diário */
+        .nota-item {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--primary-dark);
         }
-        .foto-prog-wrap {
-            position: relative;
-            width: 72px;
-            height: 72px;
-            border-radius: 10px;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-        .foto-prog-wrap img {
+        .nota-item .nota-data { color: #bbb; font-size: 0.82em; margin-bottom: 3px; }
+        .nota-item .nota-texto { margin-bottom: 6px; }
+        .nota-item img {
             width: 100%;
-            height: 100%;
+            max-height: 180px;
             object-fit: cover;
+            border-radius: 6px;
+            margin-top: 4px;
         }
-        .foto-prog-del {
-            position: absolute;
-            top: 2px;
-            right: 2px;
-            background: rgba(0,0,0,0.45);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 10px;
-            cursor: pointer;
+
+        /* Input de foto da nota */
+        .nota-input-area { margin-top: 12px; }
+        .nota-foto-row {
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 0;
-            line-height: 1;
+            gap: 8px;
+            margin-bottom: 8px;
         }
-        .foto-prog-label {
+        .nota-foto-btn {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 7px 14px;
+            gap: 5px;
+            padding: 7px 13px;
             background: #fff0f5;
             border: 1.5px dashed var(--primary-dark);
             border-radius: 20px;
             color: var(--primary-dark);
-            font-size: 0.82em;
+            font-size: 0.8em;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 4px;
-            width: auto;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
-        .foto-prog-label:hover { background: #ffe0ec; }
-
-        .nota-item { background: #f9f9f9; padding: 8px; border-radius: 5px; font-size: 0.9em; margin-bottom: 5px; border-left: 3px solid var(--primary-dark); }
+        .nota-foto-btn:hover { background: #ffe0ec; }
+        .nota-foto-nome {
+            font-size: 0.78em;
+            color: var(--primary-dark);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .nota-input-row {
+            display: flex;
+            gap: 5px;
+        }
 
         .bottom-nav {
             position: fixed; bottom: 0; width: 100%; background-color: white;
@@ -374,7 +372,7 @@
             </div>
         </div>
 
-    <input type="file" id="fotoProjetoInput" accept="image/*" style="display:none">
+    <input type="file" id="fotoNotaInput" accept="image/*" style="display:none">
 
         <div class="bottom-nav">
             <div class="nav-item active" onclick="mudarAba('estoque', this)">Baú</div>
@@ -432,17 +430,14 @@
                 const label = document.getElementById('linhaFotoLabel');
                 label.textContent = this.files[0] ? '✅ ' + this.files[0].name : '🌸 Clique aqui pra escolher a imagem';
             });
-            document.getElementById('fotoProjetoInput').addEventListener('change', function() {
-                if (!this.files[0] || !_projetoFotoId) return;
+            document.getElementById('fotoNotaInput').addEventListener('change', function() {
+                if (!this.files[0] || !_notaProjetoId) return;
                 const reader = new FileReader();
+                const projId = _notaProjetoId;
                 reader.onload = function(e) {
-                    const proj = projetos.find(p => p.id === _projetoFotoId);
-                    if (proj) {
-                        if (!proj.fotos) proj.fotos = [];
-                        proj.fotos.push(e.target.result);
-                        salvarDados();
-                        renderizarTudo();
-                    }
+                    _notaFotos[projId] = { base64: e.target.result, nome: '' };
+                    const nomeEl = document.getElementById(`nota_foto_nome_${projId}`);
+                    if (nomeEl) nomeEl.textContent = '✅ foto selecionada';
                 };
                 reader.readAsDataURL(this.files[0]);
                 this.value = '';
@@ -546,26 +541,18 @@
         }
 
         // ---- PROJETOS ----
-        let _projetoFotoId = null;
+        let _notaProjetoId = null;
+        let _notaFotos = {};
 
-        function abrirFotoProjeto(id) {
-            _projetoFotoId = id;
-            document.getElementById('fotoProjetoInput').click();
-        }
-
-        function removerFotoProjeto(projId, idx) {
-            const proj = projetos.find(p => p.id === projId);
-            if (proj && proj.fotos) {
-                proj.fotos.splice(idx, 1);
-                salvarDados();
-                renderizarTudo();
-            }
+        function abrirFotoNota(id) {
+            _notaProjetoId = id;
+            document.getElementById('fotoNotaInput').click();
         }
 
         function adicionarProjeto() {
             const nome = document.getElementById('projetoNome').value;
             if(!nome) return alert("Dê um nome ao seu projeto!");
-            projetos.unshift({ id: Date.now(), nome, progresso: 0, notas: [], fotos: [] });
+            projetos.unshift({ id: Date.now(), nome, progresso: 0, notas: [] });
             salvarDados();
             document.getElementById('projetoNome').value = '';
             renderizarTudo();
@@ -588,7 +575,9 @@
             const proj = projetos.find(p => p.id === id);
             if(proj) {
                 const data = new Date().toLocaleDateString('pt-BR');
-                proj.notas.push({ texto, data });
+                const fotoData = _notaFotos[id] ? _notaFotos[id].base64 : null;
+                proj.notas.push({ texto, data, foto: fotoData });
+                delete _notaFotos[id];
                 salvarDados();
                 renderizarTudo();
             }
@@ -649,13 +638,13 @@
             divProjetos.innerHTML = '';
             projetos.forEach(proj => {
                 const pct = parseInt(proj.progresso) || 0;
-                const fotos = proj.fotos || [];
-                const fotosHTML = fotos.map((f, i) => `
-                    <div class="foto-prog-wrap">
-                        <img src="${f}" alt="foto progresso">
-                        <button class="foto-prog-del" onclick="removerFotoProjeto(${proj.id}, ${i})">✕</button>
+                let notasHTML = proj.notas.map(n => `
+                    <div class="nota-item">
+                        <div class="nota-data">${n.data}</div>
+                        <div class="nota-texto">${n.texto}</div>
+                        ${n.foto ? `<img src="${n.foto}" alt="foto da nota">` : ''}
                     </div>`).join('');
-                let notasHTML = proj.notas.map(n => `<div class="nota-item"><em>${n.data}:</em> ${n.texto}</div>`).join('');
+                const fotoSelecionada = _notaFotos[proj.id];
                 divProjetos.innerHTML += `
                     <div class="card">
                         <strong>${proj.nome}</strong>
@@ -674,17 +663,17 @@
                         </div>
 
                         <div style="margin-top: 14px;">
-                            <strong>📸 Fotos do Progresso:</strong>
-                            <div class="fotos-progresso">${fotosHTML}</div>
-                            <span class="foto-prog-label" onclick="abrirFotoProjeto(${proj.id})">🌸 Adicionar foto</span>
-                        </div>
-
-                        <div style="margin-top: 14px;">
                             <strong>Diário de Bordo:</strong>
                             ${notasHTML}
-                            <div style="display: flex; gap: 5px; margin-top: 10px;">
-                                <input type="text" id="nota_input_${proj.id}" placeholder="Dificuldades, adaptações..." style="margin: 0;">
-                                <button class="btn-primary" style="width: auto;" onclick="adicionarNota(${proj.id})">Salvar</button>
+                            <div class="nota-input-area">
+                                <div class="nota-foto-row">
+                                    <span class="nota-foto-btn" onclick="abrirFotoNota(${proj.id})">📸 foto</span>
+                                    <span class="nota-foto-nome" id="nota_foto_nome_${proj.id}">${fotoSelecionada ? '✅ foto selecionada' : ''}</span>
+                                </div>
+                                <div class="nota-input-row">
+                                    <input type="text" id="nota_input_${proj.id}" placeholder="Dificuldades, adaptações..." style="margin: 0;">
+                                    <button class="btn-primary" style="width: auto;" onclick="adicionarNota(${proj.id})">Salvar</button>
+                                </div>
                             </div>
                         </div>
 
