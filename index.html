@@ -21,6 +21,9 @@
             padding: 0;
         }
 
+        * { scrollbar-width: none; }
+        *::-webkit-scrollbar { display: none; }
+
         /* ---- TELA DE LOGIN ---- */
         #login-screen {
             position: fixed;
@@ -96,25 +99,11 @@
             background-color: var(--primary);
             color: white;
             padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-
-        .header-title { font-size: 1.3em; font-weight: bold; }
-
-        .btn-sair {
-            background: rgba(255,255,255,0.25);
-            border: 1px solid rgba(255,255,255,0.5);
-            color: white;
-            padding: 5px 14px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            cursor: pointer;
-        }
-
-        .btn-sair:hover { background: rgba(255,255,255,0.4); }
 
         .container { padding: 15px; }
         .tab-content { display: none; animation: fadeIn 0.3s; }
@@ -197,10 +186,7 @@
 
     <!-- APP PRINCIPAL -->
     <div id="app">
-        <header>
-            <div class="header-title">🧶 Cantinho da Lilly</div>
-            <button class="btn-sair" onclick="fazerLogout()">Sair</button>
-        </header>
+        <header>🧶 Cantinho da Lilly</header>
 
         <div class="container">
             <div id="estoque" class="tab-content active">
