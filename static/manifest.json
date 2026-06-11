@@ -1,0 +1,21 @@
+{
+  "name": "Cantinho da Lilly",
+  "short_name": "Crochê Lilly",
+  "description": "Meu baú de fios e projetos 💕",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff0f5",
+  "theme_color": "#db7093",
+  "icons": [
+    {
+      "src": "/static/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

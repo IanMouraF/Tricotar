@@ -1,5 +1,6 @@
 import uuid
-from flask import render_template, request, jsonify, redirect, url_for
+import os
+from flask import render_template, request, jsonify, redirect, url_for, send_from_directory
 from flask_login import login_required, login_user, current_user
 
 from app import app, db, AdminUser
@@ -143,3 +144,12 @@ def deletar_projeto(projeto_id):
         db.session.delete(projeto)
         db.session.commit()
     return jsonify({'ok': True})
+
+# ---- ROTAS PARA O PWA (Aplicativo de Celular) ----
+@app.route('/manifest.json')
+def serve_manifest():
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'manifest.json')
+
+@app.route('/sw.js')
+def serve_sw():
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'sw.js')

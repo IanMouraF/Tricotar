@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crochê da Lilly 💕</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#db7093">
+    <link rel="apple-touch-icon" href="/static/icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
         :root {
             --bg-color: #fff0f5;
@@ -410,6 +415,12 @@
                         <button class="btn-delete" style="margin-top: 15px;" onclick="removerProjeto('${proj.id}')">Finalizar/Remover</button>
                     </div>`;
             });
+        }
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+            .then(() => console.log("PWA Registrado com sucesso!"))
+            .catch((err) => console.log("Erro no PWA:", err));
         }
     </script>
 </body>
