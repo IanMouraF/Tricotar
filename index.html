@@ -129,6 +129,27 @@
             font-family: inherit;
         }
 
+        input[type="file"] { display: none; }
+
+        .foto-label {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #fff0f5;
+            border: 1.5px dashed var(--primary-dark);
+            border-radius: 8px;
+            box-sizing: border-box;
+            color: var(--primary-dark);
+            font-size: 0.95em;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .foto-label:hover { background-color: #ffe0ec; }
+
         textarea { resize: vertical; }
 
         button.btn-primary { background-color: var(--primary-dark); color: white; border: none; font-weight: bold; cursor: pointer; }
@@ -193,7 +214,8 @@
                 <h2>Meu Baú de Fios</h2>
                 <div class="card">
                     <h3>Adicionar Novo Fio</h3>
-                    <input type="file" id="linhaFoto" accept="image/*" title="Foto da linha">
+                    <label class="foto-label" for="linhaFoto" id="linhaFotoLabel">🌸 Clique aqui pra escolher a imagem</label>
+                    <input type="file" id="linhaFoto" accept="image/*">
                     <input type="text" id="linhaMarca" placeholder="Marca (ex: Amigurumi)">
                     <input type="text" id="linhaCor" placeholder="Cor (ex: Rosa Bebê)">
                     <select id="linhaEspessura">
@@ -290,6 +312,10 @@
             document.getElementById('login-user').addEventListener('keydown', e => {
                 if (e.key === 'Enter') document.getElementById('login-pass').focus();
             });
+            document.getElementById('linhaFoto').addEventListener('change', function() {
+                const label = document.getElementById('linhaFotoLabel');
+                label.textContent = this.files[0] ? '✅ ' + this.files[0].name : '🌸 Clique aqui pra escolher a imagem';
+            });
             verificarSessao();
         });
 
@@ -345,6 +371,7 @@
             document.getElementById('linhaEspessura').value = '';
             document.getElementById('linhaGramas').value = '';
             document.getElementById('linhaFoto').value = '';
+            document.getElementById('linhaFotoLabel').textContent = '🌸 Clique aqui pra escolher a imagem';
             renderizarTudo();
         }
 
