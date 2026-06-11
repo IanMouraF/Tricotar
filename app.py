@@ -12,6 +12,7 @@
         pass
 
     app = Flask(__name__)
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.secret_key = os.environ.get("SESSION_SECRET", "segredo-do-cantinho-da-lilly")
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
