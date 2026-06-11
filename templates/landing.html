@@ -3,92 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crochê da Lilly 💕</title>
+    <title>Cantinho da Lilly 💕</title>
     <style>
-        :root {
-            --bg-color: #fff0f5;
-            --primary: #ffb6c1;
-            --primary-dark: #db7093;
-            --text: #4a4a4a;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            background-color: #fff0f5;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; margin: 0;
+            color: #4a4a4a;
         }
-
-        .landing-card {
-            background: white;
-            border-radius: 24px;
-            padding: 48px 36px;
-            text-align: center;
-            box-shadow: 0 8px 32px rgba(219,112,147,0.15);
-            max-width: 400px;
-            width: 100%;
+        .card {
+            background: white; padding: 35px 25px; border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.06); text-align: center;
+            border-top: 8px solid #ffb6c1; width: 90%; max-width: 320px;
         }
-
-        .yarn-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-            display: block;
+        .card h2 { color: #db7093; margin-top: 0; }
+        input {
+            width: 100%; padding: 12px; margin: 10px 0;
+            border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box;
+            font-size: 1em; text-align: center;
         }
-
-        h1 {
-            font-size: 1.8em;
-            color: var(--primary-dark);
-            margin-bottom: 8px;
+        input:focus { outline: none; border-color: #db7093; }
+        button {
+            background: #db7093; color: white; border: none;
+            padding: 12px; width: 100%; border-radius: 8px;
+            font-weight: bold; font-size: 1.05em; cursor: pointer;
+            transition: background 0.2s; margin-top: 10px;
         }
-
-        .subtitle {
-            color: #aaa;
-            font-size: 0.95em;
-            margin-bottom: 36px;
-            line-height: 1.5;
-        }
-
-        .btn-login {
-            display: inline-block;
-            background-color: var(--primary-dark);
-            color: white;
-            padding: 14px 40px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1em;
-            transition: background 0.2s, transform 0.1s;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .btn-login:hover {
-            background-color: #c0607f;
-            transform: translateY(-1px);
-        }
-
-        .footer-note {
-            margin-top: 24px;
-            font-size: 0.8em;
-            color: #ccc;
+        button:hover { background: #c75b7e; }
+        .erro { 
+            background: #f8d7da; color: #721c24; padding: 10px; 
+            border-radius: 8px; font-size: 0.85em; margin-bottom: 10px; 
         }
     </style>
 </head>
 <body>
-    <div class="landing-card">
-        <span class="yarn-icon">🧶</span>
-        <h1>Cantinho da Lilly</h1>
-        <p class="subtitle">Seu espaço para organizar fios, ideias e projetos de crochê com muito carinho 💕</p>
-        <a href="{{ url_for('replit_auth.login') }}" class="btn-login">Entrar</a>
-        <p class="footer-note">Faça login para acessar seu baú de fios</p>
+    <div class="card">
+        <h2>🧶 Oi, Lilly!</h2>
+        <p>Entre no seu cantinho especial:</p>
+        
+        {% if erro %}
+        <div class="erro">{{ erro }}</div>
+        {% endif %}
+        
+        <form method="POST">
+            <input type="text" name="usuario" placeholder="Seu usuário..." required autofocus>
+            <input type="password" name="senha" placeholder="Sua senha mágica..." required>
+            <button type="submit">Entrar no Baú</button>
+        </form>
     </div>
 </body>
 </html>

@@ -57,3 +57,8 @@ externalPort = 80
 [agent]
 expertMode = true
 integrations = ["python_log_in_with_replit:1.0.0", "python_database:1.0.0"]
+
+[userenv]
+
+[userenv.shared]
+EXTERNAL_DB_URL = "postgresql://postgres:ianzaopaixao15@db.yeggrucxgpoybejkpqrp.supabase.co:5432/postgres"

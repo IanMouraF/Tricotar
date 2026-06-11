@@ -156,7 +156,7 @@
 
     <div class="container">
         <div id="estoque" class="tab-content active">
-            <h2>Meu Baú de Fios</h2>
+            <h2>Meu Baú de Fios NUVEM</h2>
             <div class="card">
                 <h3>Adicionar Novo Fio</h3>
                 <input type="file" id="linhaFoto" accept="image/*" title="Foto da linha">
@@ -211,204 +211,195 @@
     </div>
 
     <script>
-        let estoque = JSON.parse(localStorage.getItem('lilly_estoque_v2')) || [];
-        let ideias = JSON.parse(localStorage.getItem('lilly_ideias_v2')) || [];
-        let projetos = JSON.parse(localStorage.getItem('lilly_projetos_v2')) || [];
+            let estoque = [];
+            let ideias = [];
+            let projetos = [];
 
-        function mudarAba(abaId, elemento) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            document.getElementById(abaId).classList.add('active');
-            elemento.classList.add('active');
-            renderizarTudo();
-        }
-
-        function salvarDados() {
-            try {
-                localStorage.setItem('lilly_estoque_v2', JSON.stringify(estoque));
-                localStorage.setItem('lilly_ideias_v2', JSON.stringify(ideias));
-                localStorage.setItem('lilly_projetos_v2', JSON.stringify(projetos));
-            } catch (e) {
-                alert("Atenção: A memória do navegador está cheia! Tente apagar algumas fotos antigas.");
-            }
-        }
-
-        function adicionarLinha() {
-            const marca = document.getElementById('linhaMarca').value;
-            const cor = document.getElementById('linhaCor').value;
-            const espessura = document.getElementById('linhaEspessura').value;
-            const gramas = parseInt(document.getElementById('linhaGramas').value) || 0;
-            const fotoInput = document.getElementById('linhaFoto');
-
-            if(!marca || !cor || !espessura) return alert("Preencha marca, cor e espessura!");
-
-            if(fotoInput.files && fotoInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    salvarNovoFio(marca, cor, espessura, gramas, e.target.result);
-                };
-                reader.readAsDataURL(fotoInput.files[0]);
-            } else {
-                salvarNovoFio(marca, cor, espessura, gramas, '');
-            }
-        }
-
-        function salvarNovoFio(marca, cor, espessura, gramas, fotoBase64) {
-            estoque.unshift({ id: Date.now(), marca, cor, espessura, gramas, foto: fotoBase64 });
-            salvarDados();
-            document.getElementById('linhaMarca').value = '';
-            document.getElementById('linhaCor').value = '';
-            document.getElementById('linhaEspessura').value = '';
-            document.getElementById('linhaGramas').value = '';
-            document.getElementById('linhaFoto').value = '';
-            renderizarTudo();
-        }
-
-        function alterarGramas(id, valor) {
-            const fio = estoque.find(f => f.id === id);
-            if(fio) {
-                fio.gramas = Math.max(0, fio.gramas + valor);
-                salvarDados();
+            function mudarAba(abaId, elemento) {
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                document.getElementById(abaId).classList.add('active');
+                elemento.classList.add('active');
                 renderizarTudo();
             }
-        }
 
-        function removerLinha(id) {
-            estoque = estoque.filter(item => item.id !== id);
-            salvarDados();
-            renderizarTudo();
-        }
-
-        function adicionarIdeia() {
-            const nome = document.getElementById('ideiaNome').value;
-            const link = document.getElementById('ideiaLink').value;
-            const corReq = document.getElementById('ideiaCor').value;
-            const espReq = document.getElementById('ideiaEspessura').value;
-
-            if(!nome) return alert("Dê um nome à ideia!");
-
-            ideias.unshift({ id: Date.now(), nome, link, req: { cor: corReq, espessura: espReq } });
-            salvarDados();
-            document.getElementById('ideiaNome').value = '';
-            document.getElementById('ideiaLink').value = '';
-            document.getElementById('ideiaCor').value = '';
-            document.getElementById('ideiaEspessura').value = '';
-            renderizarTudo();
-        }
-
-        function removerIdeia(id) {
-            ideias = ideias.filter(item => item.id !== id);
-            salvarDados();
-            renderizarTudo();
-        }
-
-        function adicionarProjeto() {
-            const nome = document.getElementById('projetoNome').value;
-            if(!nome) return alert("Dê um nome ao seu projeto!");
-            projetos.unshift({ id: Date.now(), nome, progresso: 0, notas: [] });
-            salvarDados();
-            document.getElementById('projetoNome').value = '';
-            renderizarTudo();
-        }
-
-        function atualizarProgresso(id, valor) {
-            const proj = projetos.find(p => p.id === id);
-            if(proj) {
-                proj.progresso = valor;
-                salvarDados();
-                renderizarTudo();
+            async function carregarDados() {
+                try {
+                    const resFios = await fetch('/api/fios');
+                    estoque = await resFios.json();
+                    const resIdeias = await fetch('/api/ideias');
+                    ideias = await resIdeias.json();
+                    const resProjetos = await fetch('/api/projetos');
+                    projetos = await resProjetos.json();
+                    renderizarTudo();
+                } catch (e) {
+                    console.error("Erro ao carregar do banco:", e);
+                }
             }
-        }
 
-        function adicionarNota(id) {
-            const inputNota = document.getElementById(`nota_input_${id}`);
-            const texto = inputNota.value.trim();
-            if(!texto) return;
+            function adicionarLinha() {
+                const marca = document.getElementById('linhaMarca').value;
+                const cor = document.getElementById('linhaCor').value;
+                const espessura = document.getElementById('linhaEspessura').value;
+                const gramas = parseInt(document.getElementById('linhaGramas').value) || 0;
+                const fotoInput = document.getElementById('linhaFoto');
 
-            const proj = projetos.find(p => p.id === id);
-            if(proj) {
+                if(!marca || !cor || !espessura) return alert("Preencha marca, cor e espessura!");
+
+                if(fotoInput.files && fotoInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) { salvarNovoFio(marca, cor, espessura, gramas, e.target.result); };
+                    reader.readAsDataURL(fotoInput.files[0]);
+                } else {
+                    salvarNovoFio(marca, cor, espessura, gramas, '');
+                }
+            }
+
+            async function salvarNovoFio(marca, cor, espessura, gramas, fotoBase64) {
+                await fetch('/api/fios', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ marca, cor, espessura, gramas, foto: fotoBase64 })
+                });
+                document.getElementById('linhaMarca').value = '';
+                document.getElementById('linhaCor').value = '';
+                document.getElementById('linhaEspessura').value = '';
+                document.getElementById('linhaGramas').value = '';
+                document.getElementById('linhaFoto').value = '';
+                await carregarDados();
+            }
+
+            async function alterarGramas(id, valor) {
+                await fetch(`/api/fios/${id}/gramas`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ delta: valor })
+                });
+                await carregarDados();
+            }
+
+            async function removerLinha(id) {
+                if(!confirm("Deseja mesmo remover?")) return;
+                await fetch(`/api/fios/${id}`, { method: 'DELETE' });
+                await carregarDados();
+            }
+
+            async function adicionarIdeia() {
+                const nome = document.getElementById('ideiaNome').value;
+                const link = document.getElementById('ideiaLink').value;
+                const corReq = document.getElementById('ideiaCor').value;
+                const espReq = document.getElementById('ideiaEspessura').value;
+                if(!nome) return alert("Dê um nome!");
+                await fetch('/api/ideias', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, link, req: { cor: corReq, espessura: espReq } })
+                });
+                document.getElementById('ideiaNome').value = '';
+                document.getElementById('ideiaLink').value = '';
+                document.getElementById('ideiaCor').value = '';
+                document.getElementById('ideiaEspessura').value = '';
+                await carregarDados();
+            }
+
+            async function removerIdeia(id) {
+                if(!confirm("Remover ideia?")) return;
+                await fetch(`/api/ideias/${id}`, { method: 'DELETE' });
+                await carregarDados();
+            }
+
+            async function adicionarProjeto() {
+                const nome = document.getElementById('projetoNome').value;
+                if(!nome) return alert("Dê um nome!");
+                await fetch('/api/projetos', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nome })
+                });
+                document.getElementById('projetoNome').value = '';
+                await carregarDados();
+            }
+
+            async function atualizarProgresso(id, valor) {
+                await fetch(`/api/projetos/${id}/progresso`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ valor: parseInt(valor) })
+                });
+                await carregarDados();
+            }
+
+            async function adicionarNota(id) {
+                const inputNota = document.getElementById(`nota_input_${id}`);
+                const texto = inputNota.value.trim();
+                if(!texto) return;
                 const data = new Date().toLocaleDateString('pt-BR');
-                proj.notas.push({ texto, data });
-                salvarDados();
-                renderizarTudo();
+                await fetch(`/api/projetos/${id}/notas`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ texto, data })
+                });
+                inputNota.value = '';
+                await carregarDados();
             }
-        }
 
-        function removerProjeto(id) {
-            projetos = projetos.filter(item => item.id !== id);
-            salvarDados();
-            renderizarTudo();
-        }
+            async function removerProjeto(id) {
+                if(!confirm("Finalizar projeto?")) return;
+                await fetch(`/api/projetos/${id}`, { method: 'DELETE' });
+                await carregarDados();
+            }
 
-        function avaliarPossibilidade(req) {
-            if(!req.cor || !req.espessura) return '';
-            const temLinha = estoque.some(linha =>
-                linha.cor.toLowerCase().includes(req.cor.toLowerCase()) &&
-                linha.espessura === req.espessura
-            );
-            return temLinha
-                ? `<span class="status status-pronto">Pronto para a agulha! ✨</span>`
-                : `<span class="status status-compras">Dia de comprinhas! 🛍️</span>`;
-        }
+            function avaliarPossibilidade(req) {
+                if(!req.cor || !req.espessura) return '';
+                const temLinha = estoque.some(l => l.cor.toLowerCase().includes(req.cor.toLowerCase()) && l.espessura === req.espessura);
+                return temLinha ? `<span class="status status-pronto">Pronto para a agulha! ✨</span>` : `<span class="status status-compras">Dia de comprinhas! 🛍️</span>`;
+            }
 
-        function renderizarTudo() {
-            const divEstoque = document.getElementById('listaEstoque');
-            divEstoque.innerHTML = '';
-            estoque.forEach(linha => {
-                const imgTag = linha.foto ? `<img src="${linha.foto}" class="foto-fio" alt="Foto da linha">` : '';
-                divEstoque.innerHTML += `
-                    <div class="card">
-                        ${imgTag}
-                        <strong>${linha.cor}</strong> (${linha.marca})<br>
-                        Espessura: ${linha.espessura}
-                        <div class="gramas-control">
-                            <button class="btn-secondary btn-icon" onclick="alterarGramas(${linha.id}, -10)">-10g</button>
-                            <span><strong>${linha.gramas}g</strong></span>
-                            <button class="btn-secondary btn-icon" onclick="alterarGramas(${linha.id}, 10)">+10g</button>
-                        </div>
-                        <button class="btn-delete" onclick="removerLinha(${linha.id})">Remover</button>
-                    </div>`;
-            });
-
-            const divIdeias = document.getElementById('listaIdeias');
-            divIdeias.innerHTML = '';
-            ideias.forEach(ideia => {
-                const linkTag = ideia.link ? `<a href="${ideia.link}" target="_blank" style="color: var(--primary-dark); font-size: 0.9em;">🔗 Ver Referência/Receita</a><br>` : '';
-                divIdeias.innerHTML += `
-                    <div class="card">
-                        <strong>${ideia.nome}</strong><br>
-                        ${linkTag}
-                        Precisa de: ${ideia.req.cor || 'N/A'} (${ideia.req.espessura || 'N/A'})<br>
-                        ${avaliarPossibilidade(ideia.req)}<br>
-                        <button class="btn-delete" onclick="removerIdeia(${ideia.id})">Remover</button>
-                    </div>`;
-            });
-
-            const divProjetos = document.getElementById('listaProjetos');
-            divProjetos.innerHTML = '';
-            projetos.forEach(proj => {
-                let notasHTML = proj.notas.map(n => `<div class="nota-item"><em>${n.data}:</em> ${n.texto}</div>`).join('');
-                divProjetos.innerHTML += `
-                    <div class="card">
-                        <strong>${proj.nome}</strong>
-                        <div class="progress-container">
-                            <label style="font-size: 0.8em;">Progresso: ${proj.progresso}%</label>
-                            <input type="range" min="0" max="100" value="${proj.progresso}" onchange="atualizarProgresso(${proj.id}, this.value)">
-                        </div>
-                        <div style="margin-top: 15px;">
-                            <strong>Diário de Bordo:</strong>
-                            ${notasHTML}
-                            <div style="display: flex; gap: 5px; margin-top: 10px;">
-                                <input type="text" id="nota_input_${proj.id}" placeholder="Dificuldades, adaptações..." style="margin: 0;">
-                                <button class="btn-primary" style="width: auto;" onclick="adicionarNota(${proj.id})">Salvar</button>
+            function renderizarTudo() {
+                const divEstoque = document.getElementById('listaEstoque');
+                divEstoque.innerHTML = '';
+                estoque.forEach(linha => {
+                    const imgTag = linha.foto ? `<img src="${linha.foto}" class="foto-fio" alt="Foto">` : '';
+                    divEstoque.innerHTML += `
+                        <div class="card">
+                            ${imgTag}
+                            <strong>${linha.cor}</strong> (${linha.marca})<br>
+                            Esp: ${linha.espessura}
+                            <div class="gramas-control">
+                                <button class="btn-secondary btn-icon" onclick="alterarGramas('${linha.id}', -10)">-10g</button>
+                                <span><strong>${linha.gramas}g</strong></span>
+                                <button class="btn-secondary btn-icon" onclick="alterarGramas('${linha.id}', 10)">+10g</button>
                             </div>
-                        </div>
-                        <button class="btn-delete" style="margin-top: 15px;" onclick="removerProjeto(${proj.id})">Finalizar/Remover</button>
-                    </div>`;
-            });
-        }
+                            <button class="btn-delete" onclick="removerLinha('${linha.id}')">Remover</button>
+                        </div>`;
+                });
 
-        renderizarTudo();
+                const divIdeias = document.getElementById('listaIdeias');
+                divIdeias.innerHTML = '';
+                ideias.forEach(ideia => {
+                    const linkTag = ideia.link ? `<a href="${ideia.link}" target="_blank" style="color: var(--primary-dark);">🔗 Ver Receita</a><br>` : '';
+                    divIdeias.innerHTML += `
+                        <div class="card">
+                            <strong>${ideia.nome}</strong><br>${linkTag}
+                            Precisa de: ${ideia.req.cor || 'N/A'} (${ideia.req.espessura || 'N/A'})<br>${avaliarPossibilidade(ideia.req)}<br>
+                            <button class="btn-delete" onclick="removerIdeia('${ideia.id}')">Remover</button>
+                        </div>`;
+                });
+
+                const divProjetos = document.getElementById('listaProjetos');
+                divProjetos.innerHTML = '';
+                projetos.forEach(proj => {
+                    let notasHTML = proj.notas.map(n => `<div class="nota-item"><em>${n.data}:</em> ${n.texto}</div>`).join('');
+                    divProjetos.innerHTML += `
+                        <div class="card">
+                            <strong>${proj.nome}</strong>
+                            <div class="progress-container">
+                                <label>Progresso: ${proj.progresso}%</label>
+                                <input type="range" min="0" max="100" value="${proj.progresso}" onchange="atualizarProgresso('${proj.id}', this.value)">
+                            </div>
+                            <div style="margin-top: 15px;">
+                                <strong>Diário de Bordo:</strong>${notasHTML}
+                                <div style="display: flex; gap: 5px; margin-top: 10px;">
+                                    <input type="text" id="nota_input_${proj.id}" placeholder="Dificuldades..." style="margin: 0;">
+                                    <button class="btn-primary" style="width: auto;" onclick="adicionarNota('${proj.id}')">Salvar</button>
+                                </div>
+                            </div>
+                            <button class="btn-delete" style="margin-top: 15px;" onclick="removerProjeto('${proj.id}')">Finalizar/Remover</button>
+                        </div>`;
+                });
+            }
+            carregarDados();
     </script>
 </body>
 </html>
