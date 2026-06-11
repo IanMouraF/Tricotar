@@ -1,5 +1,6 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 from sqlalchemy.orm import DeclarativeBase
 import os
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -7,8 +8,10 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
+
 class Base(DeclarativeBase):
     pass
+
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET")
@@ -22,6 +25,14 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
 }
 
 db = SQLAlchemy(app, model_class=Base)
+
+login_manager = LoginManager(app)
+
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    return jsonify({'error': 'Não autorizado. Faça login para continuar.'}), 401
+
 
 with app.app_context():
     import models  # noqa: F401
