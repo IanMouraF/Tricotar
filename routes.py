@@ -1,23 +1,17 @@
 import uuid
 from flask import session, render_template, request, jsonify
-from flask_login import login_required, login_user, logout_user, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
+from app import app, db
+from replit_auth import require_login, make_replit_blueprint
+from flask_login import current_user
+from models import Fio
 
-from app import app, db, login_manager
-from models import User, Fio
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return db.session.get(User, user_id)
+app.register_blueprint(make_replit_blueprint(), url_prefix="/auth")
 
 
 @app.before_request
 def make_session_permanent():
     session.permanent = True
 
-
-# ---- Páginas ----
 
 @app.route('/')
 def index():
@@ -27,64 +21,15 @@ def index():
 
 
 @app.route('/app')
-@login_required
+@require_login
 def main_app():
     return render_template('app.html', user=current_user)
-
-
-# ---- Auth ----
-
-@app.route('/auth/register', methods=['POST'])
-def register():
-    data = request.get_json()
-    email = (data.get('email') or '').strip().lower()
-    password = data.get('password') or ''
-    first_name = (data.get('first_name') or '').strip()
-
-    if not email or not password:
-        return jsonify({'error': 'E-mail e senha são obrigatórios.'}), 400
-
-    if User.query.filter_by(email=email).first():
-        return jsonify({'error': 'Este e-mail já está cadastrado.'}), 409
-
-    user = User(
-        id=str(uuid.uuid4()),
-        email=email,
-        first_name=first_name,
-        password_hash=generate_password_hash(password),
-    )
-    db.session.add(user)
-    db.session.commit()
-    login_user(user)
-    return jsonify({'ok': True, 'first_name': user.first_name}), 201
-
-
-@app.route('/auth/login', methods=['POST'])
-def auth_login():
-    data = request.get_json()
-    email = (data.get('email') or '').strip().lower()
-    password = data.get('password') or ''
-
-    user = User.query.filter_by(email=email).first()
-    if not user or not check_password_hash(user.password_hash, password):
-        return jsonify({'error': 'E-mail ou senha incorretos.'}), 401
-
-    login_user(user, remember=True)
-    return jsonify({'ok': True, 'first_name': user.first_name})
-
-
-@app.route('/auth/logout', methods=['POST'])
-@login_required
-def auth_logout():
-    logout_user()
-    session.clear()
-    return jsonify({'ok': True})
 
 
 # ---- API: Fios ----
 
 @app.route('/api/fios', methods=['GET'])
-@login_required
+@require_login
 def get_fios():
     fios = Fio.query.filter_by(user_id=current_user.id).order_by(Fio.created_at.desc()).all()
     return jsonify([{
@@ -98,7 +43,7 @@ def get_fios():
 
 
 @app.route('/api/fios', methods=['POST'])
-@login_required
+@require_login
 def criar_fio():
     data = request.get_json()
     fio = Fio(
@@ -116,7 +61,7 @@ def criar_fio():
 
 
 @app.route('/api/fios/<fio_id>/gramas', methods=['POST'])
-@login_required
+@require_login
 def atualizar_gramas(fio_id):
     fio = Fio.query.filter_by(id=fio_id, user_id=current_user.id).first_or_404()
     data = request.get_json()
@@ -127,7 +72,7 @@ def atualizar_gramas(fio_id):
 
 
 @app.route('/api/fios/<fio_id>', methods=['DELETE'])
-@login_required
+@require_login
 def deletar_fio(fio_id):
     fio = Fio.query.filter_by(id=fio_id, user_id=current_user.id).first_or_404()
     db.session.delete(fio)
