@@ -171,17 +171,6 @@
                 <input type="number" id="linhaGramas" placeholder="Gramas (ex: 100)">
                 <button class="btn-primary" onclick="adicionarLinha()">Guardar no Baú</button>
             </div>
-            <div class="card" style="padding: 10px 15px; margin-bottom: 10px;">
-                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-                    <input type="text" id="filtroBusca" placeholder="Buscar fio por cor ou marca..." style="margin:0; flex:1; min-width:160px;" oninput="renderizarTudo()">
-                    <select id="filtroEspessura" style="margin:0; width:auto;" onchange="renderizarTudo()">
-                        <option value="">Todas as espessuras</option>
-                        <option value="Fina">Fina</option>
-                        <option value="Média">Média</option>
-                        <option value="Grossa">Grossa</option>
-                    </select>
-                </div>
-            </div>
             <div id="listaEstoque"></div>
         </div>
 
@@ -222,7 +211,7 @@
     </div>
 
     <script>
-        let estoque = [];
+        let estoque = JSON.parse(localStorage.getItem('lilly_estoque_v2')) || [];
         let ideias = JSON.parse(localStorage.getItem('lilly_ideias_v2')) || [];
         let projetos = JSON.parse(localStorage.getItem('lilly_projetos_v2')) || [];
 
@@ -236,23 +225,12 @@
 
         function salvarDados() {
             try {
+                localStorage.setItem('lilly_estoque_v2', JSON.stringify(estoque));
                 localStorage.setItem('lilly_ideias_v2', JSON.stringify(ideias));
                 localStorage.setItem('lilly_projetos_v2', JSON.stringify(projetos));
             } catch (e) {
                 alert("Atenção: A memória do navegador está cheia! Tente apagar algumas fotos antigas.");
             }
-        }
-
-        async function carregarEstoque() {
-            try {
-                const res = await fetch('/api/fios');
-                if (res.ok) {
-                    estoque = await res.json();
-                }
-            } catch (e) {
-                console.error('Erro ao carregar estoque:', e);
-            }
-            renderizarTudo();
         }
 
         function adicionarLinha() {
@@ -275,52 +253,30 @@
             }
         }
 
-        async function salvarNovoFio(marca, cor, espessura, gramas, fotoBase64) {
-            try {
-                const res = await fetch('/api/fios', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ marca, cor, espessura, gramas, foto: fotoBase64 || null })
-                });
-                if (!res.ok) throw new Error('Erro ao salvar fio');
-            } catch (e) {
-                alert('Não foi possível salvar o fio. Tente novamente.');
-                return;
-            }
+        function salvarNovoFio(marca, cor, espessura, gramas, fotoBase64) {
+            estoque.unshift({ id: Date.now(), marca, cor, espessura, gramas, foto: fotoBase64 });
+            salvarDados();
             document.getElementById('linhaMarca').value = '';
             document.getElementById('linhaCor').value = '';
             document.getElementById('linhaEspessura').value = '';
             document.getElementById('linhaGramas').value = '';
             document.getElementById('linhaFoto').value = '';
-            await carregarEstoque();
+            renderizarTudo();
         }
 
-        async function alterarGramas(id, valor) {
-            try {
-                const res = await fetch(`/api/fios/${id}/gramas`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ delta: valor })
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    const fio = estoque.find(f => f.id === id);
-                    if (fio) { fio.gramas = data.gramas; renderizarTudo(); }
-                }
-            } catch (e) {
-                console.error('Erro ao atualizar gramas:', e);
+        function alterarGramas(id, valor) {
+            const fio = estoque.find(f => f.id === id);
+            if(fio) {
+                fio.gramas = Math.max(0, fio.gramas + valor);
+                salvarDados();
+                renderizarTudo();
             }
         }
 
-        async function removerLinha(id) {
-            if (!confirm('Deseja mesmo remover este fio do seu Baú?')) return;
-            try {
-                await fetch(`/api/fios/${id}`, { method: 'DELETE' });
-            } catch (e) {
-                alert('Não foi possível remover o fio. Tente novamente.');
-                return;
-            }
-            await carregarEstoque();
+        function removerLinha(id) {
+            estoque = estoque.filter(item => item.id !== id);
+            salvarDados();
+            renderizarTudo();
         }
 
         function adicionarIdeia() {
@@ -398,18 +354,7 @@
         function renderizarTudo() {
             const divEstoque = document.getElementById('listaEstoque');
             divEstoque.innerHTML = '';
-            const busca = (document.getElementById('filtroBusca')?.value || '').toLowerCase();
-            const espFiltro = document.getElementById('filtroEspessura')?.value || '';
-            const estoqueVis = estoque.filter(l =>
-                (!busca || l.cor.toLowerCase().includes(busca) || l.marca.toLowerCase().includes(busca)) &&
-                (!espFiltro || l.espessura === espFiltro)
-            );
-            if (estoque.length === 0) {
-                divEstoque.innerHTML = '<p style="text-align:center;color:#aaa;">Nenhum fio no baú ainda 🧺</p>';
-            } else if (estoqueVis.length === 0) {
-                divEstoque.innerHTML = '<p style="text-align:center;color:#aaa;">Nenhum fio encontrado com esse filtro 🔍</p>';
-            }
-            estoqueVis.forEach(linha => {
+            estoque.forEach(linha => {
                 const imgTag = linha.foto ? `<img src="${linha.foto}" class="foto-fio" alt="Foto da linha">` : '';
                 divEstoque.innerHTML += `
                     <div class="card">
@@ -417,11 +362,11 @@
                         <strong>${linha.cor}</strong> (${linha.marca})<br>
                         Espessura: ${linha.espessura}
                         <div class="gramas-control">
-                            <button class="btn-secondary btn-icon" onclick="alterarGramas('${linha.id}', -10)">-10g</button>
+                            <button class="btn-secondary btn-icon" onclick="alterarGramas(${linha.id}, -10)">-10g</button>
                             <span><strong>${linha.gramas}g</strong></span>
-                            <button class="btn-secondary btn-icon" onclick="alterarGramas('${linha.id}', 10)">+10g</button>
+                            <button class="btn-secondary btn-icon" onclick="alterarGramas(${linha.id}, 10)">+10g</button>
                         </div>
-                        <button class="btn-delete" onclick="removerLinha('${linha.id}')">Remover</button>
+                        <button class="btn-delete" onclick="removerLinha(${linha.id})">Remover</button>
                     </div>`;
             });
 
@@ -463,7 +408,7 @@
             });
         }
 
-        carregarEstoque();
+        renderizarTudo();
     </script>
 </body>
 </html>
